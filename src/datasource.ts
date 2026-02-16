@@ -183,6 +183,16 @@ export class DuckDBDataSource extends SqlDatasource {
     return result;
   }
 
+  applyTemplateVariables(target: SQLQuery, scopedVars: ScopedVars): SQLQuery {
+    const queryModel = this.getQueryModel(target, this.templateSrv, scopedVars);
+    return {
+      refId: target.refId,
+      datasource: this.getRef(),
+      rawSql: queryModel.interpolate(),
+      format: target.format,
+    };
+  }
+
   async fetchTables(): Promise<string[]> {
     const tables = await this.runSql<{ table: string[] }>(showTablesQuery(), { refId: 'tables' });
     console.log("fetched tables", tables);
