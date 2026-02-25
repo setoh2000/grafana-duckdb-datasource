@@ -8,12 +8,10 @@ test('$__time macros expand and filter correctly', async ({ panelEditPage, readP
   await panelEditPage.getQueryEditorRow('A').getByRole('radiogroup').getByLabel('Code').click();
 
   const query = `
-    WITH samples(ts, label) AS (
-      SELECT now() - INTERVAL '30 minutes', 'in_range'
-      UNION ALL
-      SELECT now() - INTERVAL '2 day', 'out_of_range_past'
-      UNION ALL
-      SELECT now() + INTERVAL '2 day', 'out_of_range_future'
+    WITH samples(ts, label) AS ( VALUES 
+      (now() - INTERVAL '30 minutes', 'in_range'),
+      (now() - INTERVAL '2 day', 'out_of_range_past'),
+      (now() + INTERVAL '2 day', 'out_of_range_future')
     )
     SELECT
       label,
